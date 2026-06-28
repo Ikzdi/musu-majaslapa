@@ -998,7 +998,7 @@
     const slow = make(".race__lane--slow", 1.0, [0.12, 0.34, 0.56, 0.74, 0.92]);
     const fast = make(".race__lane--fast", 0.14, [0.02, 0.05, 0.08, 0.11, 0.13]);
     const lanes = [slow, fast];
-    let raf = 0, t0 = 0;
+    let raf = 0, t0 = 0, started = false;
     const DUR = 3400;
 
     function reset() {
@@ -1013,6 +1013,7 @@
       });
     }
     function frame(now) {
+      started = true;
       const p = Math.min((now - t0) / DUR, 1);
       lanes.forEach((L) => {
         const lp = Math.min(p / L.finish, 1);
@@ -1035,15 +1036,23 @@
         if (L.time) L.time.classList.add("is-on");
       });
     }
-    function run() { reset(); t0 = performance.now(); raf = requestAnimationFrame(frame); }
-    showFinal(); // sane static state (reduced-motion / no rAF) — both finished, times shown
+    function run() {
+      started = false; reset(); t0 = performance.now(); raf = requestAnimationFrame(frame);
+      // Safety: if rAF never fires (throttled/headless), don't leave it empty.
+      setTimeout(() => { if (!started) showFinal(); }, 220);
+    }
+    showFinal(); // sane static state before the race plays — both finished, times shown
     if (btn) btn.addEventListener("click", run);
-    // Auto-run once on scroll-in for motion users; reduced-motion users press the button.
-    if (!reduceMotion && "IntersectionObserver" in window) {
+    // Auto-run once when scrolled into view. This is a short, deliberate, user-
+    // relevant demo (not ambient motion), so it plays for everyone — including
+    // reduced-motion — and can always be replayed with the button.
+    if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver((es) => {
         es.forEach((e) => { if (e.isIntersecting) { run(); io.disconnect(); } });
-      }, { threshold: 0.5 });
+      }, { threshold: 0.45 });
       io.observe(sec);
+    } else if (btn) {
+      // No IO: leave the finished state; the button replays.
     }
   })();
 
