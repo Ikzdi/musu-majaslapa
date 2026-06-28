@@ -986,31 +986,37 @@
     const sec = $(".race");
     if (!sec) return;
     const btn = $(".race__run", sec);
-    const make = (sel, finish, thresholds) => ({
-      blocks: $$(sel + " .rb", sec),
+    const make = (sel, finish, paintAt) => ({
+      lane: $(sel, sec),
       prog: $(sel + " .race__prog i", sec),
+      skel: $(sel + " .race__skel", sec),
       spin: $(sel + " .race__spin", sec),
       flag: $(sel + " .race__flag", sec),
       time: $(sel + " .race__time", sec),
-      hero: $(sel + " .rb--hero", sec),
-      finish: finish, thresholds: thresholds,
+      finish: finish, paintAt: paintAt,
     });
-    const slow = make(".race__lane--slow", 1.0, [0.12, 0.34, 0.56, 0.74, 0.92]);
-    const fast = make(".race__lane--fast", 0.14, [0.02, 0.05, 0.08, 0.11, 0.13]);
+    const slow = make(".race__lane--slow", 1.0, 0.92);
+    const fast = make(".race__lane--fast", 0.16, 0.6);
     const lanes = [slow, fast];
     let raf = 0, t0 = 0, started = false;
-    const DUR = 3400;
+    const DUR = 3600;
 
     function reset() {
       cancelAnimationFrame(raf); raf = 0;
       lanes.forEach((L) => {
-        L.blocks.forEach((b) => b.classList.remove("is-on"));
         if (L.prog) L.prog.style.width = "0%";
+        if (L.lane) L.lane.classList.remove("is-loaded");
+        if (L.skel) L.skel.classList.remove("jank");
         if (L.spin) L.spin.classList.remove("is-on");
         if (L.flag) L.flag.classList.remove("is-on");
         if (L.time) L.time.classList.remove("is-on");
-        if (L.hero) L.hero.classList.remove("jank");
       });
+    }
+    function paint(L) {
+      if (L.lane) L.lane.classList.add("is-loaded");
+      if (L.spin) L.spin.classList.remove("is-on");
+      if (L.flag) L.flag.classList.add("is-on");
+      if (L.time) L.time.classList.add("is-on");
     }
     function frame(now) {
       started = true;
@@ -1018,28 +1024,25 @@
       lanes.forEach((L) => {
         const lp = Math.min(p / L.finish, 1);
         if (L.prog) L.prog.style.width = (lp * 100) + "%";
-        L.blocks.forEach((b, i) => { if (lp >= L.thresholds[i]) b.classList.add("is-on"); });
-        if (L.hero && L === slow) L.hero.classList.toggle("jank", lp > 0.5 && lp < 0.92);
-        if (L.spin) L.spin.classList.toggle("is-on", lp < 1);
-        if (lp >= 1) { if (L.flag) L.flag.classList.add("is-on"); if (L.time) L.time.classList.add("is-on"); }
+        const loaded = lp >= L.paintAt;
+        if (L === slow && L.skel) L.skel.classList.toggle("jank", lp > 0.4 && lp < L.paintAt);
+        if (L === slow && L.spin) L.spin.classList.toggle("is-on", !loaded);
+        if (loaded) paint(L);
       });
       if (p < 1) raf = requestAnimationFrame(frame);
     }
     function showFinal() {
       cancelAnimationFrame(raf); raf = 0;
       lanes.forEach((L) => {
-        L.blocks.forEach((b) => b.classList.add("is-on"));
         if (L.prog) L.prog.style.width = "100%";
-        if (L.spin) L.spin.classList.remove("is-on");
-        if (L.hero) L.hero.classList.remove("jank");
-        if (L.flag) L.flag.classList.add("is-on");
-        if (L.time) L.time.classList.add("is-on");
+        if (L.skel) L.skel.classList.remove("jank");
+        paint(L);
       });
     }
     function run() {
       started = false; reset(); t0 = performance.now(); raf = requestAnimationFrame(frame);
       // Safety: if rAF never fires (throttled/headless), don't leave it empty.
-      setTimeout(() => { if (!started) showFinal(); }, 220);
+      setTimeout(() => { if (!started) showFinal(); }, 240);
     }
     showFinal(); // sane static state before the race plays — both finished, times shown
     if (btn) btn.addEventListener("click", run);
