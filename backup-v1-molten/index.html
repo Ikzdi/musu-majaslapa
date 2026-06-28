@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0a0b" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ff4a1c'/%3E%3Crect x='9' y='8' width='14' height='3' rx='1.5' fill='%231a0a04'/%3E%3Crect x='9' y='14.5' width='10' height='3' rx='1.5' fill='%231a0a04'/%3E%3C/svg%3E" />
+  <title>FORMA — Premium mājaslapu izstrāde un dizains</title>
+  <meta name="description" content="FORMA ir digitālā studija no Rīgas. Veidojam premium mājaslapas, interneta veikalus un SEO risinājumus, kas pārvērš apmeklētājus klientos." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="FORMA — Premium mājaslapu izstrāde" />
+  <meta property="og:description" content="Mājaslapas, kas pārdod jūsu vietā. Premium izstrāde, dizains un SEO." />
+  <meta property="og:locale" content="lv_LV" />
+
+  <script>
+    (function () {
+      var d = document.documentElement;
+      d.classList.add('js');
+      d.classList.add('intro-active');     // homepage intro always plays...
+      try {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+          d.classList.add('intro-reduced'); // ...as a gentle motion-safe fade when reduced
+      } catch (e) {}
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Pāriet uz saturu</a>
+
+  <!-- Homepage intro: "Molten Latch" shutter (decorative, inert, self-removing) -->
+  <div class="intro" id="intro" aria-hidden="true" inert>
+    <div class="intro__cols">
+      <span class="intro__col"></span>
+      <span class="intro__col"></span>
+      <span class="intro__col intro__col--mid"><span class="intro__brand">FORMA</span></span>
+      <span class="intro__col"></span>
+      <span class="intro__col"></span>
+    </div>
+    <div class="intro__meter" aria-hidden="true">
+      <span class="intro__count">00</span>
+      <span class="intro__bar"><i></i></span>
+    </div>
+  </div>
+
+  <div class="page-transition" data-state="idle" aria-hidden="true">
+    <span class="pt-brand">FORMA</span>
+  </div>
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true">
+    <div class="cursor__dot"></div>
+    <div class="cursor__ring"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="index.html" class="brand" data-cursor aria-label="FORMA — sākums">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__name">FORMA</span>
+      </a>
+      <nav class="nav" aria-label="Galvenā navigācija">
+        <a href="index.html" class="nav__link is-active" aria-current="page" data-cursor>Sākums</a>
+        <a href="pakalpojumi.html" class="nav__link" data-cursor>Pakalpojumi</a>
+        <a href="darbi.html" class="nav__link" data-cursor>Darbi</a>
+        <a href="par-mums.html" class="nav__link" data-cursor>Par mums</a>
+        <a href="kontakti.html" class="nav__link" data-cursor>Kontakti</a>
+      </nav>
+      <a href="kontakti.html" class="btn btn--sm header__cta" data-modal-open="quote" data-magnetic data-cursor>
+        <span>Sākt projektu</span>
+        <svg viewBox="0 0 16 16" aria-hidden="true" width="14" height="14"><path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <button class="burger" id="burger" aria-label="Atvērt izvēlni" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <nav class="mobile-menu__nav" aria-label="Mobilā navigācija">
+      <a href="index.html"><span class="mobile-menu__num">01</span> Sākums</a>
+      <a href="pakalpojumi.html"><span class="mobile-menu__num">02</span> Pakalpojumi</a>
+      <a href="darbi.html"><span class="mobile-menu__num">03</span> Darbi</a>
+      <a href="par-mums.html"><span class="mobile-menu__num">04</span> Par mums</a>
+      <a href="kontakti.html"><span class="mobile-menu__num">05</span> Kontakti</a>
+    </nav>
+    <div class="mobile-menu__foot">
+      <a href="mailto:klavdasmis77@gmail.com">klavdasmis77@gmail.com</a>
+      <span>Rīga, Latvija</span>
+    </div>
+  </div>
+
+  <main id="main">
+    <span id="top"></span>
+
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="blob blob--1"></div>
+        <div class="blob blob--2"></div>
+        <div class="hero__grid"></div>
+      </div>
+      <div class="container hero__inner">
+        <p class="hero__eyebrow reveal" data-reveal>
+          <span class="dot"></span> <span data-scramble>Digitālā studija · Rīga</span>
+        </p>
+        <h1 class="hero__title" id="hero-title">
+          <span class="line"><span class="w">Mājaslapas,</span></span>
+          <span class="line"><span class="w">kas</span> <span class="w accent-serif">pārdod</span></span>
+          <span class="line"><span class="w">jūsu</span> <span class="w">vietā.</span></span>
+        </h1>
+        <p class="hero__lead reveal" data-reveal data-delay="1">
+          Premium mājaslapu izstrāde, interneta veikali un SEO — radīti tā,
+          lai pārvērstu apmeklētājus maksājošos klientos.
+        </p>
+        <div class="hero__actions reveal" data-reveal data-delay="2">
+          <a href="kontakti.html" class="btn btn--lg" data-modal-open="quote" data-magnetic data-cursor>
+            <span>Sākt projektu</span>
+            <svg viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="darbi.html" class="btn btn--ghost btn--lg" data-cursor>
+            <span>Skatīt darbus</span>
+          </a>
+        </div>
+        <ul class="hero__stats reveal" data-reveal data-delay="3">
+          <li><strong data-count="120" data-suffix="+">120+</strong><span>realizēti projekti</span></li>
+          <li><strong data-count="9" data-suffix="">9</strong><span>gadi pieredzes</span></li>
+          <li><strong data-count="98" data-suffix="%">98%</strong><span>klientu iesaka</span></li>
+        </ul>
+      </div>
+      <a href="#pakalpojumi" class="hero__scroll" data-cursor aria-label="Ritināt zemāk">
+        <span>Ritini</span>
+        <span class="hero__scroll-line"><i></i></span>
+      </a>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Mājaslapas</span><span class="sep">✳</span>
+        <span>Interneta veikali</span><span class="sep">✳</span>
+        <span>Zīmolvedība</span><span class="sep">✳</span>
+        <span>UI / UX dizains</span><span class="sep">✳</span>
+        <span>SEO</span><span class="sep">✳</span>
+        <span>Google Ads</span><span class="sep">✳</span>
+        <span>Uzturēšana</span><span class="sep">✳</span>
+        <span>Mājaslapas</span><span class="sep">✳</span>
+        <span>Interneta veikali</span><span class="sep">✳</span>
+        <span>Zīmolvedība</span><span class="sep">✳</span>
+        <span>UI / UX dizains</span><span class="sep">✳</span>
+        <span>SEO</span><span class="sep">✳</span>
+        <span>Google Ads</span><span class="sep">✳</span>
+        <span>Uzturēšana</span><span class="sep">✳</span>
+      </div>
+    </div>
+
+    <!-- SERVICES -->
+    <section class="section services" id="pakalpojumi" aria-labelledby="services-title">
+      <div class="container">
+        <header class="section__head section__head--row">
+          <div>
+            <p class="section__eyebrow reveal" data-reveal><span>(01)</span> Pakalpojumi</p>
+            <h2 class="section__title reveal" data-reveal data-delay="1" id="services-title">
+              Viss, kas vajadzīgs jūsu <em class="accent-serif">izaugsmei</em>.
+            </h2>
+          </div>
+          <a href="pakalpojumi.html" class="link-arrow reveal" data-reveal data-delay="2" data-cursor>
+            Visi pakalpojumi <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </header>
+        <div class="services__grid">
+          <article class="card service" data-reveal data-tilt data-cursor>
+            <span class="service__num">01</span>
+            <div class="service__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 8h18M7 12h6M7 15h4"/></svg></div>
+            <h3 class="service__title">Mājaslapu izstrāde</h3>
+            <p>Ātras, pārdomātas un SEO-draudzīgas mājaslapas, kas precīzi atspoguļo jūsu zīmolu un pārvērš apmeklētājus pieprasījumos.</p>
+          </article>
+          <article class="card service" data-reveal data-delay="1" data-tilt data-cursor>
+            <span class="service__num">02</span>
+            <div class="service__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h2l1.6 9.5a2 2 0 0 0 2 1.5h7.8a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg></div>
+            <h3 class="service__title">Interneta veikali</h3>
+            <p>E-komercijas risinājumi (WooCommerce, Shopify), kas vienkārši pārvaldāmi un veidoti, lai maksimāli palielinātu pārdošanu.</p>
+          </article>
+          <article class="card service" data-reveal data-delay="2" data-tilt data-cursor>
+            <span class="service__num">03</span>
+            <div class="service__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/><circle cx="12" cy="12" r="2.4"/></svg></div>
+            <h3 class="service__title">UI / UX dizains</h3>
+            <p>Lietotāja pieredze un saskarnes, kas izskatās izsmalcināti un strādā nevainojami uz jebkuras ierīces.</p>
+          </article>
+          <article class="card service" data-reveal data-tilt data-cursor>
+            <span class="service__num">04</span>
+            <div class="service__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16c4-9 12-9 16 0"/><circle cx="12" cy="9" r="2.2"/><path d="M5 19h14"/></svg></div>
+            <h3 class="service__title">Zīmolvedība</h3>
+            <p>Logo, vizuālā identitāte un zīmola valoda, kas izceļas konkurences vidū un paliek atmiņā.</p>
+          </article>
+          <article class="card service" data-reveal data-delay="1" data-tilt data-cursor>
+            <span class="service__num">05</span>
+            <div class="service__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/></svg></div>
+            <h3 class="service__title">SEO & Google Ads</h3>
+            <p>Vairāk redzamības Google meklēšanā un reklāmas kampaņas, kas atmaksājas un nes mērāmus rezultātus.</p>
+          </article>
+          <article class="card service" data-reveal data-delay="2" data-tilt data-cursor>
+            <span class="service__num">06</span>
+            <div class="service__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.3 4.7 5.2.8-3.7 3.6.9 5.1L12 14.8 7.3 17.2l.9-5.1L4.5 8.5l5.2-.8z"/></svg></div>
+            <h3 class="service__title">Uzturēšana & atbalsts</h3>
+            <p>Rūpējamies par jūsu vietni — atjauninājumi, drošība, dublējumi un ātrums, lai viss strādā nevainojami.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section class="section work" id="darbi" aria-labelledby="work-title">
+      <div class="container">
+        <header class="section__head section__head--row">
+          <div>
+            <p class="section__eyebrow reveal" data-reveal><span>(02)</span> Izlase</p>
+            <h2 class="section__title reveal" data-reveal data-delay="1" id="work-title">
+              Daži no mūsu <em class="accent-serif">jaunākajiem</em> darbiem.
+            </h2>
+          </div>
+          <a href="darbi.html" class="link-arrow reveal" data-reveal data-delay="2" data-cursor>
+            Visi projekti <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </header>
+        <div class="work__grid">
+          <article class="work-card work-card--lg" data-reveal data-cursor>
+            <div class="work-card__media art art--1" aria-hidden="true"><div class="art__window"><span></span><span></span><span></span></div></div>
+            <div class="work-card__meta"><h3>Nordwood</h3><p>Interneta veikals · Mēbeles</p><span class="work-card__year">2025</span></div>
+            <span class="work-card__cta" aria-hidden="true">Skatīt projektu</span>
+            <button class="work-card__hit" data-modal-open="project" aria-label="Skatīt projektu: Nordwood"
+              data-title="Nordwood" data-meta="Interneta veikals · Mēbeles · 2025" data-art="art--1"
+              data-tags="WooCommerce, UX dizains, SEO, Fotogrāfija"
+              data-desc="Premium mēbeļu interneta veikals ar individuālu produktu konfiguratoru. Pārstrādājām visu pirkšanas ceļu un ielādes ātrumu — rezultātā konversija pieauga par 38% un pieprasījumu skaits par 140% pirmajos trīs mēnešos."></button>
+          </article>
+          <article class="work-card" data-reveal data-delay="1" data-cursor>
+            <div class="work-card__media art art--2" aria-hidden="true"><div class="art__window"><span></span><span></span><span></span></div></div>
+            <div class="work-card__meta"><h3>Lumen Clinic</h3><p>Mājaslapa · Veselība</p><span class="work-card__year">2025</span></div>
+            <span class="work-card__cta" aria-hidden="true">Skatīt projektu</span>
+            <button class="work-card__hit" data-modal-open="project" aria-label="Skatīt projektu: Lumen Clinic"
+              data-title="Lumen Clinic" data-meta="Mājaslapa · Veselība · 2025" data-art="art--2"
+              data-tags="WordPress, Online pieraksts, SEO"
+              data-desc="Mūsdienīga klīnikas mājaslapa ar tiešsaistes pierakstu sistēmu un skaidru pakalpojumu struktūru. Pieejamība un uzticamība bija galvenās prioritātes — sasniedzām WCAG AA atbilstību visā vietnē."></button>
+          </article>
+          <article class="work-card" data-reveal data-delay="2" data-cursor>
+            <div class="work-card__media art art--3" aria-hidden="true"><div class="art__window"><span></span><span></span><span></span></div></div>
+            <div class="work-card__meta"><h3>Vēja Parks</h3><p>Zīmols & web · Enerģētika</p><span class="work-card__year">2024</span></div>
+            <span class="work-card__cta" aria-hidden="true">Skatīt projektu</span>
+            <button class="work-card__hit" data-modal-open="project" aria-label="Skatīt projektu: Vēja Parks"
+              data-title="Vēja Parks" data-meta="Zīmols & web · Enerģētika · 2024" data-art="art--3"
+              data-tags="Zīmolvedība, Logo, Web dizains"
+              data-desc="Pilna zīmola identitāte atjaunojamās enerģijas uzņēmumam — no logo līdz korporatīvajai mājaslapai. Izveidojām spēcīgu, uzticamu vizuālo valodu, kas darbojas gan drukā, gan digitāli."></button>
+          </article>
+          <article class="work-card work-card--lg" data-reveal data-delay="1" data-cursor>
+            <div class="work-card__media art art--4" aria-hidden="true"><div class="art__window"><span></span><span></span><span></span></div></div>
+            <div class="work-card__meta"><h3>Atlas Finance</h3><p>SaaS landing · Fintech</p><span class="work-card__year">2024</span></div>
+            <span class="work-card__cta" aria-hidden="true">Skatīt projektu</span>
+            <button class="work-card__hit" data-modal-open="project" aria-label="Skatīt projektu: Atlas Finance"
+              data-title="Atlas Finance" data-meta="SaaS landing · Fintech · 2024" data-art="art--4"
+              data-tags="Landing, Animācijas, A/B testi"
+              data-desc="Augstas konversijas landing lapa fintech produktam ar pārdomātu animāciju un skaidru vēstījumu. A/B testēšana palīdzēja palielināt reģistrāciju skaitu par 27%."></button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section class="section process" id="process" aria-labelledby="process-title">
+      <div class="container process__inner">
+        <div class="process__sticky">
+          <p class="section__eyebrow reveal" data-reveal><span>(03)</span> Process</p>
+          <h2 class="section__title reveal" data-reveal data-delay="1" id="process-title">
+            Skaidrs ceļš no idejas līdz <em class="accent-serif">rezultātam</em>.
+          </h2>
+          <p class="process__lead reveal" data-reveal data-delay="2">
+            Bez liekas birokrātijas. Jūs vienmēr zināt, kurā posmā atrodas projekts un kas notiks tālāk.
+          </p>
+        </div>
+        <ol class="process__steps">
+          <li class="step" data-reveal>
+            <div class="step__head"><span class="step__num">01</span><span class="step__pct" data-count="25" data-suffix="%">25%</span></div>
+            <h3>Izpēte & stratēģija</h3>
+            <p>Iepazīstam jūsu biznesu, mērķauditoriju un konkurentus. Definējam mērķus un izveidojam skaidru plānu.</p>
+            <div class="step__bar"><i style="--p:25%"></i></div>
+          </li>
+          <li class="step" data-reveal data-delay="1">
+            <div class="step__head"><span class="step__num">02</span><span class="step__pct" data-count="50" data-suffix="%">50%</span></div>
+            <h3>Dizains</h3>
+            <p>Veidojam vizuālo koncepciju un interaktīvu prototipu. Jūs redzat un apstiprināt katru ekrānu pirms izstrādes.</p>
+            <div class="step__bar"><i style="--p:50%"></i></div>
+          </li>
+          <li class="step" data-reveal data-delay="2">
+            <div class="step__head"><span class="step__num">03</span><span class="step__pct" data-count="80" data-suffix="%">80%</span></div>
+            <h3>Izstrāde</h3>
+            <p>Pārvēršam dizainu ātrā, drošā un responsīvā vietnē. Optimizējam ātrumu, SEO un pārlūku saderību.</p>
+            <div class="step__bar"><i style="--p:80%"></i></div>
+          </li>
+          <li class="step" data-reveal data-delay="3">
+            <div class="step__head"><span class="step__num">04</span><span class="step__pct" data-count="100" data-suffix="%">100%</span></div>
+            <h3>Palaišana & izaugsme</h3>
+            <p>Publicējam projektu, apmācām jūsu komandu un turpinām pilnveidot vietni, balstoties uz reāliem datiem.</p>
+            <div class="step__bar"><i style="--p:100%"></i></div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="section stats" aria-labelledby="stats-title">
+      <div class="container">
+        <h2 class="sr-only" id="stats-title">Skaitļi, kas runā paši par sevi</h2>
+        <div class="stats__grid">
+          <div class="stat" data-reveal><strong data-count="120" data-suffix="+">120+</strong><span>realizēti projekti</span></div>
+          <div class="stat" data-reveal data-delay="1"><strong data-count="9" data-suffix="">9</strong><span>gadi pieredzes</span></div>
+          <div class="stat" data-reveal data-delay="2"><strong data-count="38" data-suffix="">38</strong><span>ilgtermiņa klienti</span></div>
+          <div class="stat" data-reveal data-delay="3"><strong data-count="98" data-suffix="%">98%</strong><span>klientu apmierinātība</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section section--light testimonials" aria-labelledby="testi-title">
+      <div class="container">
+        <header class="section__head">
+          <p class="section__eyebrow reveal" data-reveal><span>(04)</span> Atsauksmes</p>
+          <h2 class="section__title reveal" data-reveal data-delay="1" id="testi-title">Ko saka mūsu <em class="accent-serif">klienti</em>.</h2>
+        </header>
+        <div class="testimonials__grid">
+          <figure class="quote" data-reveal data-cursor>
+            <div class="quote__stars" aria-label="5 no 5 zvaigznēm">★★★★★</div>
+            <blockquote>“Jauno mājaslapu uztaisīja ātri un ar gaumi. Pieprasījumu skaits trīs mēnešu laikā pieauga par 140%.”</blockquote>
+            <figcaption><span class="quote__name">Jānis Bērziņš</span><span class="quote__role">Īpašnieks, Nordwood</span></figcaption>
+          </figure>
+          <figure class="quote" data-reveal data-delay="1" data-cursor>
+            <div class="quote__stars" aria-label="5 no 5 zvaigznēm">★★★★★</div>
+            <blockquote>“Profesionāla komanda, kas saprot biznesu, ne tikai dizainu. Beidzot lapa, par kuru nav kauns.”</blockquote>
+            <figcaption><span class="quote__name">Anna Liepa</span><span class="quote__role">Direktore, Lumen Clinic</span></figcaption>
+          </figure>
+          <figure class="quote" data-reveal data-delay="2" data-cursor>
+            <div class="quote__stars" aria-label="5 no 5 zvaigznēm">★★★★★</div>
+            <blockquote>“Viss tika izdarīts termiņā un budžetā. Komunikācija bija skaidra katrā solī. Noteikti ieteikšu.”</blockquote>
+            <figcaption><span class="quote__name">Mārtiņš Ozols</span><span class="quote__role">CEO, Atlas Finance</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="section pricing" id="cenas" aria-labelledby="pricing-title">
+      <div class="container">
+        <header class="section__head">
+          <p class="section__eyebrow reveal" data-reveal><span>(05)</span> Cenas</p>
+          <h2 class="section__title reveal" data-reveal data-delay="1" id="pricing-title">Caurspīdīgas cenas, <em class="accent-serif">bez pārsteigumiem</em>.</h2>
+        </header>
+        <div class="pricing__grid">
+          <article class="plan" data-reveal data-cursor>
+            <header class="plan__head"><h3>Landing</h3><p>Vienas lapas vietne, kas pārliecina un pārdod.</p></header>
+            <div class="plan__price"><span class="plan__from">no</span> €1500</div>
+            <ul class="plan__list"><li>Individuāls dizains</li><li>1 lapa, līdz 6 sekcijām</li><li>Responsīvs visās ierīcēs</li><li>Kontaktu forma + SEO pamati</li><li>Piegāde 1–2 nedēļās</li></ul>
+            <a href="kontakti.html" class="btn btn--ghost btn--block" data-modal-open="quote" data-magnetic data-cursor><span>Izvēlēties</span></a>
+          </article>
+          <article class="plan plan--featured" data-reveal data-delay="1" data-cursor>
+            <span class="plan__badge">Populārākais</span>
+            <header class="plan__head"><h3>Bizness</h3><p>Pilnvērtīga mājaslapa augošam uzņēmumam.</p></header>
+            <div class="plan__price"><span class="plan__from">no</span> €3500</div>
+            <ul class="plan__list"><li>Viss no “Landing”, un vēl:</li><li>Līdz 8 lapām + CMS (pats rediģē)</li><li>Bloga / jaunumu sadaļa</li><li>Padziļināta SEO optimizācija</li><li>Analītika + ātruma optimizācija</li><li>30 dienu atbalsts pēc palaišanas</li></ul>
+            <a href="kontakti.html" class="btn btn--block" data-modal-open="quote" data-magnetic data-cursor><span>Izvēlēties</span></a>
+          </article>
+          <article class="plan" data-reveal data-delay="2" data-cursor>
+            <header class="plan__head"><h3>Premium</h3><p>Interneta veikals vai pielāgots risinājums.</p></header>
+            <div class="plan__price"><span class="plan__from">no</span> €5000</div>
+            <ul class="plan__list"><li>Viss no “Bizness”, un vēl:</li><li>Interneta veikals / individuāla funkcionalitāte</li><li>Maksājumu un piegādes integrācijas</li><li>Zīmola identitāte pēc vajadzības</li><li>Prioritārs atbalsts un uzturēšana</li></ul>
+            <a href="kontakti.html" class="btn btn--ghost btn--block" data-modal-open="quote" data-magnetic data-cursor><span>Izvēlēties</span></a>
+          </article>
+        </div>
+        <p class="pricing__note reveal" data-reveal>Katrs projekts ir individuāls — precīzu piedāvājumu sagatavojam bez maksas pēc īsas sarunas.</p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section faq" id="faq" aria-labelledby="faq-title">
+      <div class="container faq__inner">
+        <header class="section__head">
+          <p class="section__eyebrow reveal" data-reveal><span>(06)</span> BUJ</p>
+          <h2 class="section__title reveal" data-reveal data-delay="1" id="faq-title">Biežāk uzdotie <em class="accent-serif">jautājumi</em>.</h2>
+        </header>
+        <div class="faq__list">
+          <details class="faq-item" data-reveal><summary data-cursor>Cik ilgā laikā tiek izstrādāta mājaslapa?<span class="faq-item__icon" aria-hidden="true"></span></summary><div class="faq-item__body"><p>Vienkārša landing lapa parasti aizņem 1–2 nedēļas, pilnvērtīga biznesa mājaslapa 3–6 nedēļas. Interneta veikaliem termiņš ir atkarīgs no funkcionalitātes apjoma.</p></div></details>
+          <details class="faq-item" data-reveal data-delay="1"><summary data-cursor>Vai varēšu pats rediģēt saturu?<span class="faq-item__icon" aria-hidden="true"></span></summary><div class="faq-item__body"><p>Jā. Veidojam vietnes uz ērti pārvaldāmas satura sistēmas (CMS) un apmācām jūsu komandu, lai tekstus un attēlus varat mainīt paši, bez programmētāja.</p></div></details>
+          <details class="faq-item" data-reveal data-delay="2"><summary data-cursor>Kas iekļauts cenā?<span class="faq-item__icon" aria-hidden="true"></span></summary><div class="faq-item__body"><p>Individuāls dizains, izstrāde, responsivitāte, SEO pamati, ātruma optimizācija un apmācība. Precīzu iekļauto pakalpojumu sarakstu fiksējam piedāvājumā pirms darba sākšanas.</p></div></details>
+          <details class="faq-item" data-reveal data-delay="3"><summary data-cursor>Vai palīdzēsiet ar tekstiem un foto?<span class="faq-item__icon" aria-hidden="true"></span></summary><div class="faq-item__body"><p>Jā. Varam sagatavot pārdodošus tekstus, atlasīt vizuālos materiālus un nepieciešamības gadījumā organizēt profesionālu fotosesiju.</p></div></details>
+          <details class="faq-item" data-reveal data-delay="4"><summary data-cursor>Vai piedāvājat uzturēšanu pēc palaišanas?<span class="faq-item__icon" aria-hidden="true"></span></summary><div class="faq-item__body"><p>Jā. Piedāvājam ikmēneša uzturēšanas plānus — atjauninājumi, dublējumi, drošība un nelielas izmaiņas, lai vietne vienmēr strādā nevainojami.</p></div></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta" id="kontakti" aria-labelledby="cta-title">
+      <div class="container cta__inner">
+        <p class="section__eyebrow reveal" data-reveal>Sazināsimies</p>
+        <h2 class="cta__title reveal" data-reveal data-delay="1" id="cta-title">Gatavi izveidot kaut ko <em class="accent-serif">izcilu</em>?</h2>
+        <p class="cta__lead reveal" data-reveal data-delay="2">Pastāstiet par savu ideju — atbildēsim 24 stundu laikā ar konkrētiem nākamajiem soļiem.</p>
+        <div class="cta__actions reveal" data-reveal data-delay="3">
+          <a href="kontakti.html" class="btn btn--lg btn--invert" data-modal-open="quote" data-magnetic data-cursor>
+            <span>Pastāsti par savu ideju</span>
+            <svg viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path d="M3 13L13 3M13 3H5M13 3V11" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="mailto:klavdasmis77@gmail.com" class="cta__mail" data-cursor>klavdasmis77@gmail.com</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="index.html" class="brand brand--lg" data-cursor><span class="brand__mark" aria-hidden="true"></span><span class="brand__name">FORMA</span></a>
+        <p>Digitālā studija, kas veido mājaslapas ar mērķi — pārdot.</p>
+      </div>
+      <nav class="footer__col" aria-label="Kājenes navigācija">
+        <h4>Izvēlne</h4>
+        <a href="pakalpojumi.html" data-cursor>Pakalpojumi</a>
+        <a href="darbi.html" data-cursor>Darbi</a>
+        <a href="par-mums.html" data-cursor>Par mums</a>
+        <a href="kontakti.html" data-cursor>Kontakti</a>
+      </nav>
+      <div class="footer__col">
+        <h4>Kontakti</h4>
+        <a href="mailto:klavdasmis77@gmail.com" data-cursor>klavdasmis77@gmail.com</a>
+        <a href="tel:+37120000000" data-cursor>+371 20 000 000</a>
+        <span>Rīga, Latvija</span>
+      </div>
+      <div class="footer__col">
+        <h4>Sekojiet</h4>
+        <a href="#" data-cursor>Instagram</a>
+        <a href="#" data-cursor>LinkedIn</a>
+        <a href="#" data-cursor>Behance</a>
+      </div>
+    </div>
+    <div class="container footer__bottom">
+      <span>© <span id="year">2026</span> FORMA. Visas tiesības aizsargātas.</span>
+      <span>Veidots ar uzmanību detaļās.</span>
+    </div>
+  </footer>
+
+  <!-- MODAL: Project details -->
+  <dialog class="modal modal--wide" id="projectModal" aria-labelledby="pm-title">
+    <div class="modal__panel">
+      <button class="modal__close" data-modal-close aria-label="Aizvērt">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <p class="modal__eyebrow">Projekts</p>
+      <h2 class="modal__title" id="pm-title">Projekts</h2>
+      <p class="modal__meta">—</p>
+      <div class="modal__art art art--1"><div class="art__window"><span></span><span></span><span></span></div></div>
+      <div class="modal__tags"></div>
+      <div class="modal__body"><p>—</p></div>
+      <a href="kontakti.html" class="btn" data-modal-open="quote" data-cursor><span>Sākt līdzīgu projektu</span></a>
+    </div>
+  </dialog>
+
+  <!-- MODAL: Quote form -->
+  <dialog class="modal" id="quoteModal" aria-labelledby="qm-title">
+    <div class="modal__panel">
+      <button class="modal__close" data-modal-close aria-label="Aizvērt">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <p class="modal__eyebrow">Sākt projektu</p>
+      <h2 class="modal__title" id="qm-title">Pastāsti par savu ideju</h2>
+      <p class="modal__meta">Aizpildi formu un atbildēsim 24 stundu laikā.</p>
+      <form class="form" data-success="quoteSuccess" novalidate>
+        <div class="form__row">
+          <div class="field"><label for="qm-name">Vārds *</label><input id="qm-name" name="name" type="text" required placeholder="Jūsu vārds" autocomplete="name" /></div>
+          <div class="field"><label for="qm-email">E-pasts *</label><input id="qm-email" name="email" type="email" required placeholder="jūs@piemērs.lv" autocomplete="email" /></div>
+        </div>
+        <div class="field">
+          <label for="qm-budget">Aptuvenais budžets</label>
+          <select id="qm-budget" name="budget">
+            <option value="">Izvēlies...</option>
+            <option>€1500 – €3000</option>
+            <option>€3000 – €5000</option>
+            <option>€5000+</option>
+            <option>Vēl nezinu</option>
+          </select>
+        </div>
+        <div class="field"><label for="qm-msg">Par projektu *</label><textarea id="qm-msg" name="message" required placeholder="Pastāsti īsi, ko vēlies izveidot..."></textarea></div>
+        <button type="submit" class="btn btn--block" data-cursor><span>Nosūtīt pieteikumu</span></button>
+        <p class="form__note">Nospiežot “Nosūtīt”, piekrīti, ka sazināmies par tavu projektu.</p>
+      </form>
+      <div class="form__success" id="quoteSuccess">
+        <div class="form__success-icon"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
+        <h3>Paldies!</h3>
+        <p>Tavs pieteikums ir saņemts. Sazināsimies ar tevi 24 stundu laikā.</p>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>
