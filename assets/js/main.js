@@ -681,6 +681,12 @@
       const tags = (trigger.getAttribute("data-tags") || "").split(",").filter(Boolean);
       tagsWrap.innerHTML = tags.map((t) => "<span>" + t.trim() + "</span>").join("");
     }
+    const visit = $(".modal__visit", projectModal);
+    if (visit) {
+      const url = trigger.getAttribute("data-url");
+      if (url) { visit.href = url; visit.hidden = false; }
+      else { visit.removeAttribute("href"); visit.hidden = true; }
+    }
   }
 
   function openModal(name, trigger) {
