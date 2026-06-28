@@ -1005,7 +1005,7 @@
       cancelAnimationFrame(raf); raf = 0;
       lanes.forEach((L) => {
         if (L.prog) L.prog.style.width = "0%";
-        if (L.lane) L.lane.classList.remove("is-loaded");
+        if (L.lane) { L.lane.classList.remove("is-loaded"); L.lane.style.setProperty("--load", "0"); }
         if (L.skel) L.skel.classList.remove("jank");
         if (L.spin) L.spin.classList.remove("is-on");
         if (L.flag) L.flag.classList.remove("is-on");
@@ -1025,8 +1025,11 @@
         const lp = Math.min(p / L.finish, 1);
         if (L.prog) L.prog.style.width = (lp * 100) + "%";
         const loaded = lp >= L.paintAt;
-        if (L === slow && L.skel) L.skel.classList.toggle("jank", lp > 0.4 && lp < L.paintAt);
-        if (L === slow && L.spin) L.spin.classList.toggle("is-on", !loaded);
+        if (L === slow) {
+          if (L.lane) L.lane.style.setProperty("--load", Math.min(lp / L.paintAt, 1).toFixed(3));
+          if (L.skel) L.skel.classList.toggle("jank", lp > 0.4 && lp < L.paintAt);
+          if (L.spin) L.spin.classList.toggle("is-on", !loaded);
+        }
         if (loaded) paint(L);
       });
       if (p < 1) raf = requestAnimationFrame(frame);
@@ -1036,6 +1039,7 @@
       lanes.forEach((L) => {
         if (L.prog) L.prog.style.width = "100%";
         if (L.skel) L.skel.classList.remove("jank");
+        if (L.lane) L.lane.style.setProperty("--load", "1");
         paint(L);
       });
     }

@@ -1243,6 +1243,15 @@ dialog.modal[open] .modal__panel { animation: modalIn 0.5s var(--ease) both; }
 .race__shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; opacity: 0; z-index: 2; transition: opacity 0.45s var(--ease); }
 .race__lane.is-loaded .race__shot { opacity: 1; }
 .race__lane.is-loaded .race__skel { opacity: 0; }
+/* Slow lane paints progressively top-to-bottom (driven by --load 0..1):
+   like a slow page rendering downward, blurry-to-sharp, while the skeleton
+   still shows below the paint line. FORMA lane stays an instant clean paint. */
+.race__lane--slow .race__shot {
+  opacity: 1;
+  clip-path: inset(0 0 calc((1 - var(--load, 0)) * 100%) 0);
+  filter: blur(calc((1 - var(--load, 0)) * 5px));
+}
+.race__lane--slow.is-loaded .race__shot { clip-path: inset(0); filter: none; }
 .race__spin { position: absolute; top: 50%; left: 50%; width: 28px; height: 28px; margin: -14px; border: 3px solid rgba(255,255,255,0.16); border-top-color: var(--accent); border-radius: 50%; opacity: 0; z-index: 3; }
 .race__spin.is-on { opacity: 1; animation: raceSpin 0.7s linear infinite; }
 @keyframes raceSpin { to { transform: rotate(360deg); } }
