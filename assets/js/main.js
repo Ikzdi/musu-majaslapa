@@ -1217,7 +1217,9 @@
   (function initMarqueeCarousel() {
     const marquee = $(".marquee");
     const track = marquee && $(".marquee__track", marquee);
-    if (!marquee || !track || reduceMotion) return;
+    if (!marquee || !track) return;
+    /* Purely decorative (aria-hidden) and self-paced — exempt from
+       prefers-reduced-motion so the carousel always loops. */
 
     const items = $$(":scope > span:not(.sep)", track);
     const speed = 48; /* px / sec */
