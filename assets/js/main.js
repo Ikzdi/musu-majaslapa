@@ -1212,4 +1212,48 @@
       el.addEventListener("mouseleave", () => (el.style.transform = ""));
     });
   }
+
+  /* ---------- Marquee → 3D carousel ---------- */
+  (function initMarqueeCarousel() {
+    const marquee = $(".marquee");
+    const track = marquee && $(".marquee__track", marquee);
+    if (!marquee || !track || reduceMotion) return;
+
+    const items = $$(":scope > span:not(.sep)", track);
+    const speed = 48; /* px / sec */
+    let x = 0, half = 0, paused = false, raf = 0;
+
+    marquee.classList.add("marquee--carousel");
+    const measure = () => { half = track.scrollWidth / 2; };
+    measure();
+    window.addEventListener("resize", measure);
+
+    marquee.addEventListener("mouseenter", () => (paused = true));
+    marquee.addEventListener("mouseleave", () => (paused = false));
+
+    let last = 0;
+    const loop = (t) => {
+      if (!last) last = t;
+      const dt = (t - last) / 1000;
+      last = t;
+      if (!paused) x -= speed * dt;
+      if (half && -x >= half) x += half;
+      track.style.transform = `translateX(${x}px)`;
+
+      const mid = marquee.getBoundingClientRect().left + marquee.getBoundingClientRect().width / 2;
+      items.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        const center = r.left + r.width / 2;
+        const dist = clamp(Math.abs(center - mid) / (marquee.clientWidth / 2), 0, 1);
+        const scale = 1.12 - dist * 0.32;
+        const rotate = (center < mid ? 1 : -1) * dist * 16;
+        const opacity = 1 - dist * 0.62;
+        el.style.transform = `perspective(900px) rotateY(${rotate}deg) scale(${scale})`;
+        el.style.opacity = opacity;
+      });
+
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+  })();
 })();
