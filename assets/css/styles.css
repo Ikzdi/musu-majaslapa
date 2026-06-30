@@ -537,19 +537,54 @@ button { font: inherit; cursor: pointer; }
 
 /* ---------- Marquee ---------- */
 .marquee {
+  position: relative;
   border-block: 1px solid var(--line);
-  padding-block: 1.4rem; overflow: hidden;
+  padding-block: 1.5rem; overflow: hidden;
   background: var(--ink-2);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
+.marquee::before,
+.marquee::after {
+  content: "";
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  width: 14%;
+}
+.marquee::before { left: 0; background: linear-gradient(90deg, var(--ink-2), transparent); }
+.marquee::after { right: 0; left: auto; background: linear-gradient(270deg, var(--ink-2), transparent); }
 .marquee__track {
   display: flex; align-items: center; gap: 2.5rem;
   width: max-content;
   font-family: var(--font-display); font-weight: 500;
   font-size: clamp(1.4rem, 1rem + 2vw, 2.6rem);
   letter-spacing: -0.02em;
-  animation: marquee 36s linear infinite;
+  animation: marquee 32s linear infinite;
+  will-change: transform;
 }
-.marquee__track .sep { color: var(--accent); }
+.marquee:hover .marquee__track { animation-play-state: paused; }
+.marquee__track span:not(.sep) {
+  transition: color var(--dur) var(--ease), opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+  opacity: 0.78;
+  cursor: default;
+}
+.marquee__track span:not(.sep):hover {
+  color: var(--accent);
+  opacity: 1;
+  transform: translateY(-2px);
+}
+.marquee__track .sep {
+  color: var(--accent);
+  display: inline-block;
+  font-size: 0.6em;
+  animation: sep-pulse 2.4s ease-in-out infinite;
+}
+.marquee__track span:nth-of-type(4n+2).sep { animation-delay: 0.4s; }
+.marquee__track span:nth-of-type(4n+3).sep { animation-delay: 0.8s; }
+.marquee__track span:nth-of-type(4n+4).sep { animation-delay: 1.2s; }
+@keyframes sep-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.35); text-shadow: 0 0 12px var(--accent); }
+}
 @keyframes marquee { to { transform: translateX(-50%); } }
 
 /* ---------- Cards (generic) ---------- */
