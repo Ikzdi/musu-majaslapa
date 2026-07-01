@@ -2,7 +2,7 @@
 
 Daudzlapu (multi-page) premium mājaslapa digitālajai studijai, kas pārdod
 mājaslapu izstrādes pakalpojumus. Tumšs, “award-winning” dizains ar WebGL, lapu
-pārejām un modāļiem + pilna SEO optimizācija (latviešu valodā, Rīga / Latvija).
+pārejām un modāļiem + pilna SEO optimizācija (latviešu valodā, mērķauditorija — visa Latvija).
 
 > Iedvesma: [amnetwork.lv](https://amnetwork.lv) (saturs/struktūra),
 > [nexusmag.eu](https://www.nexusmag.eu) (kustība) un
@@ -14,10 +14,10 @@ pārejām un modāļiem + pilna SEO optimizācija (latviešu valodā, Rīga / La
 
 | Fails | Lapa | Primārais atslēgvārds |
 |------|------|----------------------|
-| [index.html](index.html) | Sākums | mājaslapu izstrāde Rīgā |
+| [index.html](index.html) | Sākums | mājaslapu izstrāde Latvijā |
 | [pakalpojumi.html](pakalpojumi.html) | Pakalpojumi | mājaslapu izstrādes pakalpojumi |
 | [darbi.html](darbi.html) | Darbi / portfolio | mājaslapu izstrādes darbi portfolio |
-| [par-mums.html](par-mums.html) | Par mums | web studija Rīgā |
+| [par-mums.html](par-mums.html) | Par mums | web studija Latvijā |
 | [kontakti.html](kontakti.html) | Kontakti | mājaslapas izstrādes cena |
 
 `backup-v1-molten/` = iepriekšējā versija (pirms SEO/Thrive izmaiņām).
@@ -56,11 +56,11 @@ python -m http.server 5050   # http://localhost:5050
 - **Viens H1** ar primāro atslēgvārdu katrā lapā; loģiska H2/H3 hierarhija;
   atslēgvārdi pirmajos 100 vārdos; dabiska blīvuma latviešu copy.
 - **Struktūrdati (JSON-LD)** katrā lapā: `Organization`, `ProfessionalService`
-  (LocalBusiness — Rīga, areaServed Latvija, ģeo, darba laiks, aggregateRating),
+  (LocalBusiness — areaServed Latvija, darba laiks, aggregateRating),
   `WebSite`, `BreadcrumbList`, lapas tips (`WebPage`/`CollectionPage`/`AboutPage`/
   `ContactPage`), kā arī `Service`, `ItemList` (portfolio) un `FAQPage` (kur ir
   redzama BUJ sadaļa). NAP (nosaukums/adrese/tālrunis) konsekvents visur.
-- **Lokālais SEO:** Rīga + Latvija signāli virsrakstos, H1 un saturā; `tel:` saites.
+- **Nacionālais SEO:** Latvija signāli virsrakstos, H1 un saturā; `tel:` saites.
 - **Tehniski:** `sitemap.xml`, `robots.txt`, semantisks HTML, ātrs, bez ārējām
   izpildlaika bibliotēkām.
 
