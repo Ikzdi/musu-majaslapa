@@ -951,7 +951,7 @@ button { font: inherit; cursor: pointer; }
 /* ---------- Footer ---------- */
 .footer { padding-block: clamp(3.5rem, 5vw, 5rem) 2rem; border-top: 1px solid var(--line); }
 .footer__inner {
-  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem;
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2rem;
   padding-bottom: 3rem;
 }
 .footer__brand p { color: var(--bone-mute); margin-top: 1rem; max-width: 22rem; font-size: 0.95rem; }
