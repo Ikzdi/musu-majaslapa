@@ -809,7 +809,13 @@
 
     let tiltX = 0, tiltY = 0, curTiltX = 0, curTiltY = 0;
 
+    // Published scrub state — build3d.js (WebGL assembly) consumes this so the
+    // 3D scene, progress bar and LIVE badge all move as one.
+    const shared = { p: 0, tx: 0, ty: 0 };
+    window.__formaBuildState = shared;
+
     function apply(p) {
+      shared.p = p; shared.tx = curTiltX; shared.ty = curTiltY;
       const rotX = 18 - 12 * p;            // 18deg -> 6deg as it assembles
       const sc = 0.92 + 0.1 * p;           // 0.92 -> 1.02
       if (scene) {
