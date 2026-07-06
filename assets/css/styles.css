@@ -492,8 +492,8 @@ button { font: inherit; cursor: pointer; }
   margin-bottom: 1.8rem;
 }
 .hero__title .line { display: block; overflow: hidden; }
-.hero__title .w { display: inline-block; }
-.js .hero__title .w { transform: translateY(110%); }
+.hero__title .w { display: inline-block; transform-origin: 0 100%; }
+.js .hero__title .w { transform: translateY(110%) rotate(4deg); }
 
 .hero__lead {
   max-width: 36rem; font-size: var(--fs-lead);
@@ -969,13 +969,26 @@ button { font: inherit; cursor: pointer; }
   color: var(--bone-mute); font-size: 0.85rem;
 }
 
-/* ---------- Reveal animation ---------- */
+/* ---------- Reveal animation ----------
+   Elements "assemble" into place: a touch of perspective + rotateX makes
+   sections feel like they snap together instead of just fading up. */
 .js [data-reveal] {
-  opacity: 0; transform: translateY(34px);
+  opacity: 0;
+  transform: perspective(900px) translateY(34px) rotateX(7deg);
+  transform-origin: 50% 100%;
   transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
   transition-delay: calc(var(--d, 0) * 90ms);
 }
 .js [data-reveal].is-inview { opacity: 1; transform: none; }
+
+/* Hero stats assemble one by one after their parent reveals */
+.js .hero__stats li {
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+.js .hero__stats.is-inview li { opacity: 1; transform: none; }
+.js .hero__stats.is-inview li:nth-child(2) { transition-delay: 0.12s; }
+.js .hero__stats.is-inview li:nth-child(3) { transition-delay: 0.24s; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1024px) {
@@ -1018,6 +1031,7 @@ button { font: inherit; cursor: pointer; }
     transition-duration: 0.001ms !important;
   }
   .js [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .js .hero__stats li { opacity: 1 !important; transform: none !important; }
   .js .hero__title .w { transform: none !important; }
   .cursor { display: none !important; }
   .blob { animation: none !important; }
@@ -1512,7 +1526,10 @@ dialog.modal[open] .modal__panel { animation: modalIn 0.5s var(--ease) both; }
 
 /* ---------- 3D hero canvas (Three.js) ---------- */
 #hero3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; pointer-events: none; }
-@media (max-width: 760px) { #hero3d { opacity: 0.55; } }
+/* Higgsfield GLB object rides ABOVE the video + veil (still under .hero__inner,
+   which lives in a sibling stacking context) */
+#hero3d.is-overlay { z-index: 2; }
+@media (max-width: 760px) { #hero3d { opacity: 0.55; } #hero3d.is-overlay { opacity: 0.85; } }
 
 /* ---------- 3D assembly build (CSS 3D, scroll-triggered) ---------- */
 .assembly-sec { overflow: hidden; }

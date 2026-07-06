@@ -69,7 +69,7 @@
     words.forEach((w, i) => {
       w.style.transition = "transform 0.95s cubic-bezier(0.16,1,0.3,1)";
       w.style.transitionDelay = i * 0.07 + "s";
-      requestAnimationFrame(() => (w.style.transform = "translateY(0)"));
+      requestAnimationFrame(() => (w.style.transform = "translateY(0) rotate(0deg)"));
     });
   }
 
@@ -513,7 +513,11 @@
     let userPaused = false;
     try { userPaused = sessionStorage.getItem("forma-hero-paused") === "1"; } catch (e) {}
 
-    v.addEventListener("playing", () => { if (canvas) canvas.style.display = "none"; }, { once: true });
+    // The GLB overlay (hero3d.js) renders ABOVE the playing video; only hide
+    // the canvas when no overlay is active (legacy fallback-only behavior).
+    v.addEventListener("playing", () => {
+      if (canvas && !window.__formaHeroOverlay) canvas.style.display = "none";
+    }, { once: true });
 
     const fallbackTo3D = () => {
       v.style.display = "none";
