@@ -1,5 +1,5 @@
 /* =========================================================
-   FORMA — interaction layer
+   2KWeb — interaction layer
    Progressive enhancement: every effect degrades gracefully,
    and all motion respects prefers-reduced-motion.
    ========================================================= */
@@ -25,9 +25,20 @@
     animateHero();
     runScramble();
   }
+  /* The intro / page-transition overlay covers the first ~1.5s of the page.
+     Anything the visitor is meant to *watch* (the stat count-ups) has to wait
+     until the overlay is gone, otherwise it finishes behind the curtain. */
+  let pageRevealed = false;
+  const revealWaiters = [];
+  function whenRevealed(fn) { pageRevealed ? fn() : revealWaiters.push(fn); }
+
   function finishReveal() {
     html.classList.remove("pt-entering");
     if (overlay) overlay.setAttribute("data-state", "idle");
+    if (!pageRevealed) {
+      pageRevealed = true;
+      revealWaiters.splice(0).forEach((fn) => fn());
+    }
   }
 
   const introEl = document.getElementById("intro");
@@ -142,12 +153,13 @@
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
-            animateCounter(e.target);
-            cIo.unobserve(e.target);
+            const el = e.target;
+            cIo.unobserve(el);
+            whenRevealed(() => animateCounter(el));
           }
         });
       },
-      { threshold: 0.6 }
+      { threshold: 0.35 }
     );
     counterEls.forEach((el) => cIo.observe(el));
   }
@@ -797,6 +809,21 @@
     const pieces = $$(".build-piece", track);
     const prog = $(".build-progress i", track);
     const live = $(".build-live", track);
+    const cta = $(".build-cta", track);
+    const ctaLink = cta && $("a", cta);
+
+    // The CTA only exists once the mockup has assembled: keep it out of the tab
+    // order and off the a11y tree until then. `null` forces the first sync.
+    let ctaReady = null;
+    function setCta(ready) {
+      if (ready === ctaReady) return;
+      ctaReady = ready;
+      cta.classList.toggle("is-ready", ready);
+      if (ctaLink) {
+        ctaLink.tabIndex = ready ? 0 : -1;
+        ctaLink.setAttribute("aria-hidden", String(!ready));
+      }
+    }
     const ez = (x) => 1 - Math.pow(1 - x, 3);        // easeOutCubic (motion)
     const smooth = (x) => x * x * (3 - 2 * x);        // smoothstep (fades)
 
@@ -836,6 +863,7 @@
       }
       if (prog) prog.style.transform = "scaleX(" + p + ")";
       if (live) live.style.opacity = p > 0.85 ? "1" : "0";
+      if (cta) setCta(p > 0.92);
     }
 
     track.classList.add("is-scrub");
@@ -943,15 +971,44 @@
     const linesEl = $("[data-lines]", root);
     const cta = $(".config__cta", root);
     const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    const pick = (name) => root.querySelector('input[name="' + name + '"]:checked');
+    const pick = (name) => root.querySelector('input[name="' + name + '"]:checked:not(:disabled)');
+    const condGroups = $$("[data-for]", root);
+    const addonInputs = $$('input[name="cadd"]', root);
+    const priceOf = (i) => i.closest(".config__opt").querySelector(".config__chip-price");
+    // Remember each addon's real price so we can restore it after showing "Iekļauts".
+    addonInputs.forEach((i) => { i.dataset.priceText = priceOf(i).textContent; });
+
+    /* Each project type sizes differently: a landing lapa is a single page,
+       a bizness mājaslapa is priced by page count, a veikals by product count.
+       Show only the matching group and disable the rest so they never count.
+       Addons already bundled into the chosen package can't be bought twice. */
+    function syncGroups() {
+      const type = pick("ctype");
+      const kind = type ? type.dataset.kind : "";
+      condGroups.forEach((g) => {
+        const on = g.dataset.for === kind;
+        g.hidden = !on;
+        $$("input", g).forEach((i) => (i.disabled = !on));
+      });
+      addonInputs.forEach((i) => {
+        const included = (i.dataset.includedIn || "").split(" ").indexOf(kind) !== -1;
+        if (included) i.checked = false;
+        i.disabled = included;
+        priceOf(i).textContent = included ? "Iekļauts" : i.dataset.priceText;
+        i.closest(".config__opt").classList.toggle("is-included", included);
+      });
+    }
 
     function compute() {
-      const type = pick("ctype"), pages = pick("cpages"), term = pick("cterm");
-      const addons = $$('input[name="cadd"]:checked', root);
+      const type = pick("ctype"), term = pick("cterm");
+      const extras = [pick("cpages"), pick("cproducts")].filter(Boolean);
+      const addons = $$('input[name="cadd"]:checked:not(:disabled)', root);
       const mult = term ? parseFloat(term.dataset.mult || "1") : 1;
-      const base = (+type.value || 0) + (+pages.value || 0) + addons.reduce((s, a) => s + (+a.value || 0), 0);
+      const base = (+type.value || 0) +
+        extras.reduce((s, e) => s + (+e.value || 0), 0) +
+        addons.reduce((s, a) => s + (+a.value || 0), 0);
       const total = Math.round((base * mult) / 10) * 10;
-      return { type, pages, term, addons, mult, total };
+      return { type, extras, term, addons, mult, total };
     }
     function render() {
       const c = compute();
@@ -961,7 +1018,7 @@
         amountEl.classList.remove("is-bump"); void amountEl.offsetWidth; amountEl.classList.add("is-bump");
       }
       const lines = [["Bāze · " + c.type.dataset.label, "€" + fmt(+c.type.value)]];
-      if (+c.pages.value > 0) lines.push([c.pages.dataset.label, "+€" + fmt(+c.pages.value)]);
+      c.extras.forEach((e) => { if (+e.value > 0) lines.push([e.dataset.label, "+€" + fmt(+e.value)]); });
       c.addons.forEach((a) => lines.push([a.dataset.label, "+€" + fmt(+a.value)]));
       if (c.mult !== 1) lines.push([c.term.dataset.label, "×" + c.mult]);
       linesEl.innerHTML = lines
@@ -969,7 +1026,8 @@
         .join("");
       return c;
     }
-    root.addEventListener("change", render);
+    root.addEventListener("change", () => { syncGroups(); render(); });
+    syncGroups();
     render();
 
     if (cta) {
@@ -978,20 +1036,30 @@
         const msg = $("#qm-msg"), budget = $("#qm-budget");
         const adds = c.addons.map((a) => a.dataset.label);
         if (msg) {
+          const parts = [c.type.dataset.label]
+            .concat(c.extras.map((e) => e.dataset.label))
+            .concat([c.term.dataset.label]);
           msg.value =
-            "Konfigurators — " + c.type.dataset.label + ", " + c.pages.dataset.label + ", " + c.term.dataset.label + "." +
+            "Konfigurators — " + parts.join(", ") + "." +
             (adds.length ? " Papildu: " + adds.join(", ") + "." : "") +
             " Aptuvenā cena: €" + fmt(c.total) + ".";
         }
         if (budget) {
-          const b = c.total < 3000 ? "€1500 – €3000" : (c.total <= 5000 ? "€3000 – €5000" : "€5000+");
-          Array.from(budget.options).forEach((o) => { if ((o.value || o.text) === b) budget.value = o.value || o.text; });
+          const b = c.total < 3000 ? "€1500 – €3000"
+            : c.total <= 5000 ? "€3000 – €5000"
+            : c.total <= 10000 ? "€5000 – €10 000"
+            : "€10 000+";
+          // Compare without whitespace so a nbsp in the markup still matches.
+          const norm = (s) => s.replace(/\s+/g, "");
+          Array.from(budget.options).forEach((o) => {
+            if (norm(o.value || o.text) === norm(b)) budget.value = o.value || o.text;
+          });
         }
       });
     }
   })();
 
-  /* ---------- Speed race (FORMA vs a slow site) ---------- */
+  /* ---------- Speed race (2KWeb vs a slow site) ---------- */
   (function initRace() {
     const sec = $(".race");
     if (!sec) return;
@@ -1071,46 +1139,6 @@
     } else if (btn) {
       // No IO: leave the finished state; the button replays.
     }
-  })();
-
-  /* ---------- Growth replay (draggable results chart) ---------- */
-  (function initGrowth() {
-    const chart = $(".gr__chart");
-    if (!chart) return;
-    const handle = $(".gr__handle", chart);
-    const marker = $(".gr__marker", chart);
-    const pts = [[0,236],[60,232],[120,238],[180,228],[240,232],[300,198],[360,158],[420,118],[480,86],[540,60],[600,42]];
-    const yAt = (x) => {
-      for (let i = 0; i < pts.length - 1; i++) {
-        const a = pts[i], b = pts[i + 1];
-        if (x <= b[0]) { const f = clamp((x - a[0]) / (b[0] - a[0]), 0, 1); return a[1] + (b[1] - a[1]) * f; }
-      }
-      return pts[pts.length - 1][1];
-    };
-    function setP(p) {
-      p = clamp(p, 0, 1);
-      chart.style.setProperty("--p", p);
-      const y = yAt(p * 600);
-      if (marker) { marker.style.left = (p * 100) + "%"; marker.style.top = ((y / 300) * 100) + "%"; }
-      chart.classList.toggle("show-launch", p > 0.42);
-      chart.classList.toggle("show-badge", p > 0.82);
-      if (handle) handle.setAttribute("aria-valuenow", Math.round(p * 100));
-    }
-    let dragging = false;
-    const fromX = (cx) => { const r = chart.getBoundingClientRect(); setP((cx - r.left) / r.width); };
-    chart.addEventListener("pointerdown", (e) => { dragging = true; try { chart.setPointerCapture(e.pointerId); } catch (err) {} fromX(e.clientX); });
-    chart.addEventListener("pointermove", (e) => { if (dragging) fromX(e.clientX); });
-    const stop = () => { dragging = false; };
-    chart.addEventListener("pointerup", stop);
-    chart.addEventListener("pointercancel", stop);
-    if (handle) handle.addEventListener("keydown", (e) => {
-      const cur = parseFloat(chart.style.getPropertyValue("--p")) || 0.35;
-      if (e.key === "ArrowLeft") { setP(cur - 0.04); e.preventDefault(); }
-      else if (e.key === "ArrowRight") { setP(cur + 0.04); e.preventDefault(); }
-      else if (e.key === "Home") { setP(0); e.preventDefault(); }
-      else if (e.key === "End") { setP(1); e.preventDefault(); }
-    });
-    setP(0.35);
   })();
 
   /* ---------- Forging Type: molten cool-in on section headlines ---------- */

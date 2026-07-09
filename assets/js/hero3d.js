@@ -1,5 +1,5 @@
 /* =========================================================
-   FORMA — 3D hero object (Three.js, classic/UMD build)
+   2KWeb — 3D hero object (Three.js, classic/UMD build)
    Primary: a Higgsfield-generated molten-chrome "F" (GLB) rendered
    on a transparent canvas ABOVE the hero video — it "assembles"
    from scattered shards after the intro, then floats with mouse

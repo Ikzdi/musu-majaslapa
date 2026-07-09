@@ -1,4 +1,4 @@
-# FORMA — premium digitālās studijas mājaslapa (5 lapas, SEO)
+# 2KWeb — premium digitālās studijas mājaslapa (5 lapas, SEO)
 
 Daudzlapu (multi-page) premium mājaslapa digitālajai studijai, kas pārdod
 mājaslapu izstrādes pakalpojumus. Tumšs, “award-winning” dizains ar WebGL, lapu
@@ -36,10 +36,10 @@ python -m http.server 5050   # http://localhost:5050
 
 ## ⚠️ PIRMS PUBLICĒŠANAS (obligāti SEO)
 
-1. **Nomaini domēnu.** Visur lietots placeholder `https://www.forma.lv`.
+1. **Nomaini domēnu.** Visur lietots placeholder `https://www.2kweb.lv`.
    Aizvieto to ar savu reālo domēnu šajos failos: visu 5 lapu `<head>`
    (canonical, og:url, og:image, JSON-LD `@id`/url), `robots.txt`, `sitemap.xml`.
-   (Meklē & aizvieto “www.forma.lv”.)
+   (Meklē & aizvieto “www.2kweb.lv”.)
 2. **Attēli, uz kuriem norāda SEO** (✅ jau pievienoti):
    - `assets/img/forma-og.jpg` — sociālo tīklu attēls (1200×630 px), ģenerēts no Veo hero kadra
    - `assets/img/forma-logo.png` — logo (kvadrāts, ~512×512)
@@ -80,7 +80,7 @@ python -m http.server 5050   # http://localhost:5050
   projekta tips, lapu skaits, termiņš un papildinājumi; cena pārrēķinās uzreiz, un
   poga **aizpilda kontaktformu** ar konfigurāciju + aptuveno cenu (`#qm-msg`/`#qm-budget`).
 - **Before/After slīdnis** (`.ba`, `index.html`) — velc rullīti (vai bultiņas/taustiņi),
-  lai redzētu klienta veco lapu pārtopam par FORMA dizainu; `clip-path` + rAF-lerp,
+  lai redzētu klienta veco lapu pārtopam par 2KWeb dizainu; `clip-path` + rAF-lerp,
   pieskāriena un tastatūras atbalsts (WAI-ARIA `slider`). Attēli `assets/img/ba/`.
 - **WebGL portfolio hover** (`assets/js/portfolio-gl.js`, darbi + sākums) — uz hover
   darbu attēls tiek renderēts uz GL plaknes ar šķidruma viļņojumu ap kursoru + RGB
@@ -94,7 +94,7 @@ python -m http.server 5050   # http://localhost:5050
   `will-change` pārvaldība. Ir **scroll-vadīta** (darbojas arī ar reduced-motion —
   izslēgts tikai peles-parallakss).
 - **Ātruma sacīkste** (`.race`, `index.html`) — divas “lapas” ielādējas blakus reāllaikā
-  (lēna jankaina vs FORMA 0.8s + zaļš karogs). rAF-vadīta, palaižas uz pogas un (motion)
+  (lēna jankaina vs 2KWeb 0.8s + zaļš karogs). rAF-vadīta, palaižas uz pogas un (motion)
   ieritinot; statiski rāda gala salīdzinājumu. Pārdošanas arguments par ātrumu.
 - **Izaugsmes atskaņojums** (`.gr`, `index.html`) — velkams SVG grafiks: reāla klienta
   pieprasījumi pirms/pēc palaišanas; līkne atklājas ar `clip-path`, marķieris brauc pa

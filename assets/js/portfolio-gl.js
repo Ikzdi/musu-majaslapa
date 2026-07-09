@@ -1,5 +1,5 @@
 /* =========================================================
-   FORMA — WebGL portfolio hover distortion
+   2KWeb — WebGL portfolio hover distortion
    Progressive enhancement for .work-card__media thumbnails:
    on hover the image is rendered on a GL plane with a liquid
    ripple around the cursor + subtle chromatic (RGB) shift.
