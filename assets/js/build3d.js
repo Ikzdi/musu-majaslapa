@@ -3,9 +3,8 @@
    Upgrades the CSS build-track scene to a true 3D assembly:
    dark-glass slabs fly in from scattered positions and dock
    into a floating browser window (top bar, hero banner with
-   the real site poster, three portfolio cards, glowing CTA),
-   and the Higgsfield chrome "F" arcs in last as the logo with
-   an ember-shard trail. Scroll-scrubbed: main.js publishes the
+   the real site poster, three portfolio cards and a glowing CTA).
+   Scroll-scrubbed: main.js publishes the
    smoothed progress via window.__formaBuildState and this scene
    consumes it, so the progress bar + LIVE badge stay in sync.
    Progressive enhancement: any missing capability (no THREE,
@@ -223,46 +222,6 @@
     { x: 3.8, y: -2.6, z: 2.6, rx: 0.5, ry: 1.0, rz: -0.5 },
     [0.60, 0.80]);
 
-  /* 6. The Higgsfield chrome "F" docks as the logo — with an ember trail. */
-  var fPiece = null;
-  if (THREE.GLTFLoader) {
-    new THREE.GLTFLoader().load("assets/models/forma-hero.glb", function (gltf) {
-      var obj = gltf.scene;
-      var box = new THREE.Box3().setFromObject(obj);
-      var size = box.getSize(new THREE.Vector3());
-      var center = box.getCenter(new THREE.Vector3());
-      obj.position.sub(center);
-      var wrap = new THREE.Group();
-      wrap.add(obj);
-      wrap.scale.setScalar(0.42 / Math.max(size.x, size.y, size.z || 1));
-      obj.traverse(function (n) {
-        if (n.isMesh && n.material) {
-          n.material = n.material.clone();
-          n.material.transparent = true; n.material.opacity = 0;
-          n.material.envMapIntensity = 1.4;
-          if (n.material.emissive) n.material.emissiveIntensity = 1.25;
-        }
-      });
-      fPiece = addPiece(wrap,
-        { x: -2.05, y: 1.36, z: 0.14 },
-        { x: 4.6, y: 3.2, z: 3.2, rx: 0.6, ry: 2.6, rz: 0.8 },
-        [0.74, 0.95], { arc: 1.1, spin: 2.4 });
-    }, undefined, function () { /* no logo — assembly still complete */ });
-  }
-
-  /* Ember trail shards riding with the F while it flies, fading on dock. */
-  var trailMat = new THREE.MeshStandardMaterial({
-    color: 0x1a0e08, emissive: 0xff4a1c, emissiveIntensity: 1.5,
-    metalness: 0.6, roughness: 0.35, transparent: true, opacity: 0
-  });
-  var trail = [];
-  for (var ti = 0; ti < 10; ti++) {
-    var tm = new THREE.Mesh(new THREE.TetrahedronGeometry(0.02 + Math.random() * 0.035, 0), trailMat);
-    tm.userData = { off: ti / 10, wob: Math.random() * 6 };
-    site.add(tm);
-    trail.push(tm);
-  }
-
   /* Ambient ember particle field. */
   var pGeo = new THREE.BufferGeometry();
   var P = 110, pPos = new Float32Array(P * 3);
@@ -319,25 +278,6 @@
       m.scale.setScalar(0.86 + 0.14 * backOut(dock));
       for (var j = 0; j < c.mats.length; j++) {
         c.mats[j].opacity = Math.min(1, le * 1.5);
-      }
-    }
-    // F trail: visible only mid-flight
-    if (fPiece) {
-      var fc = fPiece.userData.pc;
-      var fe = clamp01((p - fc.s) / (fc.e - fc.s));
-      var show = fe > 0.02 && fe < 0.96;
-      trailMat.opacity = show ? (1 - fe) * 0.9 : 0;
-      for (var k = 0; k < trail.length; k++) {
-        var tr = trail[k], back = Math.max(0, fe - trail[k].userData.off * 0.12);
-        var bx = fc.sp.x + (fc.tp.x - fc.sp.x) * ezOut(back);
-        var by = fc.sp.y + (fc.tp.y - fc.sp.y) * ezOut(back) + Math.sin(ezOut(back) * Math.PI) * fc.arc;
-        var bz = fc.sp.z + (fc.tp.z - fc.sp.z) * ezOut(back);
-        tr.position.set(
-          bx + Math.sin(t * 3 + tr.userData.wob) * 0.06,
-          by + Math.cos(t * 2.6 + tr.userData.wob) * 0.06,
-          bz + 0.1
-        );
-        tr.rotation.x += 0.05; tr.rotation.y += 0.04;
       }
     }
     // Power-on finale
