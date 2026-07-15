@@ -266,6 +266,16 @@
   function maxScroll() {
     return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
   }
+  // Velocity-skew targets (tagged below). --sv is set per-element, NOT on the
+  // root: a root-level custom property write invalidates style for the whole
+  // document every frame, which visibly janks 144Hz scrolling.
+  let skewEls = [];
+  let lastSv = "";
+  function setSv(v) {
+    if (v === lastSv) return;
+    lastSv = v;
+    for (let i = 0; i < skewEls.length; i++) skewEls[i].style.setProperty("--sv", v);
+  }
   let smoothPrevT = 0;
   function smoothLoop(now) {
     // Time-based easing: identical feel at 60Hz and 144Hz (a fixed 0.1/frame
@@ -277,13 +287,15 @@
     // Velocity → a subtle scroll-direction skew on media (decays with the inertia).
     const vel = ((currentY - prevY) / dt) * 16.7; // normalised to px per 60Hz frame
     prevY = currentY;
-    html.style.setProperty("--sv", clamp(vel * 0.018, -2.6, 2.6).toFixed(2) + "deg");
+    setSv(clamp(vel * 0.018, -2.6, 2.6).toFixed(2) + "deg");
     if (Math.abs(targetY - currentY) < 0.5) {
       currentY = targetY;
       smoothing = false;
-      html.style.setProperty("--sv", "0deg");
+      setSv("0deg");
     }
-    window.scrollTo(0, currentY);
+    // Whole pixels: fractional offsets shimmer sticky/fixed layers on the
+    // slow tail of the ease.
+    window.scrollTo(0, Math.round(currentY));
     if (smoothing) requestAnimationFrame(smoothLoop);
   }
   function startSmooth() {
@@ -328,9 +340,8 @@
       targetY = clamp(targetY, 0, maxScroll());
     });
     // Tag conflict-free media wrappers for the velocity skew (skewY via --sv).
-    $$(".work-card__media, .svc-row__media, .showcase__visual").forEach((el) =>
-      el.setAttribute("data-skew", "")
-    );
+    skewEls = $$(".work-card__media, .svc-row__media, .showcase__visual");
+    skewEls.forEach((el) => el.setAttribute("data-skew", ""));
   }
 
   function scrollToY(top) {
@@ -853,15 +864,19 @@
     const shared = { p: 0, tx: 0, ty: 0 };
     window.__formaBuildState = shared;
 
+    const stageEl = $(".build-stage", track);
     function apply(p) {
       shared.p = p; shared.tx = curTiltX; shared.ty = curTiltY;
+      // When the WebGL assembly owns the stage the CSS scene is hidden —
+      // skip its per-piece style writes (dead weight per frame at 144Hz).
+      const cssOwns = !(stageEl && stageEl.classList.contains("gl-build"));
       const rotX = 18 - 12 * p;            // 18deg -> 6deg as it assembles
       const sc = 0.92 + 0.1 * p;           // 0.92 -> 1.02
-      if (scene) {
+      if (scene && cssOwns) {
         scene.style.transform =
           "rotateX(" + (rotX + curTiltY * 3.5) + "deg) rotateY(" + (curTiltX * -6) + "deg) scale(" + sc + ")";
       }
-      for (let i = 0; i < n; i++) {
+      if (cssOwns) for (let i = 0; i < n; i++) {
         const d = data[i];
         const s = (i / n) * 0.5, e = s + 0.5;          // wide overlap -> no abrupt pops
         const lp = ez(clamp((p - s) / (e - s), 0, 1));
@@ -897,10 +912,15 @@
       if (scene) scene.style.willChange = v;
       for (let i = 0; i < n; i++) data[i].el.style.willChange = v;
     };
-    const loop = () => {
-      renderP = lerp(renderP, targetP, 0.12);
-      curTiltX = lerp(curTiltX, tiltX, 0.06);
-      curTiltY = lerp(curTiltY, tiltY, 0.06);
+    let prevT = 0;
+    const loop = (now) => {
+      // Time-based smoothing: same trail feel at 60Hz and 144Hz.
+      const dt = Math.min(50, now - prevT || 16.7);
+      prevT = now;
+      renderP = lerp(renderP, targetP, 1 - Math.pow(0.88, dt / 16.7));
+      const kt = 1 - Math.pow(0.94, dt / 16.7);
+      curTiltX = lerp(curTiltX, tiltX, kt);
+      curTiltY = lerp(curTiltY, tiltY, kt);
       apply(renderP);
       const settled =
         Math.abs(targetP - renderP) < 0.0005 &&
@@ -910,7 +930,12 @@
     };
     const kick = () => {
       readTarget();
-      if (!running) { running = true; setWillChange(true); requestAnimationFrame(loop); }
+      if (!running) {
+        running = true;
+        setWillChange(true);
+        prevT = performance.now();
+        requestAnimationFrame(loop);
+      }
     };
 
     if (canHover && !reduceMotion) {

@@ -103,8 +103,10 @@
   }
 
   function loop(now) {
+    // Cap near 72fps: hover effect only — no need to render at 144Hz.
+    if (now - last < 12) { raf = requestAnimationFrame(loop); return; }
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
-    hover += (target - hover) * 0.12;
+    hover += (target - hover) * (1 - Math.pow(0.88, dt * 60));
     uniforms.uHover.value = hover;
     uniforms.uTime.value += dt;
     uniforms.uMouse.value.set(mouse.x, mouse.y);

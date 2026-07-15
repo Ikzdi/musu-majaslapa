@@ -305,6 +305,8 @@
   var lastP = -1;
   function frame(now) {
     if (!visible || !onscreen) { running = false; return; }
+    // Cap near 72fps: halves GPU load on 144Hz monitors, no-op at 60Hz.
+    if (now - last < 12) { requestAnimationFrame(frame); return; }
     var rawDt = (now - last) / 1000;
     var dt = Math.min(0.05, rawDt); last = now; t += dt;
 

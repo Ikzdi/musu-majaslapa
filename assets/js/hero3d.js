@@ -267,6 +267,9 @@
 
     function frame(now) {
       if (!visible || !onscreen || canvas.style.display === "none") { running = false; return; }
+      // Decorative scene: cap near 72fps so 144Hz monitors don't pay double
+      // GPU cost (and jank the main-thread scroll). No-op at 60Hz.
+      if (now - last < 12) { requestAnimationFrame(frame); return; }
       var rawDt = (now - last) / 1000;
       var dt = Math.min(0.05, rawDt); last = now; t += dt;
       if (!perfChecked) {
