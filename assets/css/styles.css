@@ -182,11 +182,12 @@ button { font: inherit; cursor: pointer; }
   opacity: 0;
 }
 .cursor__dot {
-  position: fixed; width: 7px; height: 7px; border-radius: 50%;
-  background: #fff; transform: translate(-50%, -50%);
+  position: fixed; top: 0; left: 0; width: 7px; height: 7px; border-radius: 50%;
+  background: #fff; transform: translate(-50%, -50%); will-change: transform;
 }
 .cursor__ring {
-  position: fixed; width: 38px; height: 38px; border-radius: 50%;
+  position: fixed; top: 0; left: 0; width: 38px; height: 38px; border-radius: 50%;
+  will-change: transform;
   border: 1px solid rgba(255,255,255,0.8);
   transform: translate(-50%, -50%);
   transition: width 0.3s var(--ease), height 0.3s var(--ease),

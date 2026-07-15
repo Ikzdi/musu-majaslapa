@@ -512,21 +512,38 @@
     });
 
     const start = performance.now();
-    let running = true;
+    // The fbm shader is GPU-heavy: pause it off-screen (it used to burn GPU for
+    // the whole scroll) and cap near 72fps so 144Hz monitors don't pay double.
+    let running = true, onscreen = true, queued = false, lastF = 0;
+    function schedule() {
+      if (!queued && running && onscreen) {
+        queued = true;
+        requestAnimationFrame(frame);
+      }
+    }
     document.addEventListener("visibilitychange", () => {
       running = !document.hidden;
-      if (running) requestAnimationFrame(frame);
+      schedule();
     });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((es) => {
+        onscreen = es[0].isIntersecting;
+        schedule();
+      }).observe(host);
+    }
     function frame(now) {
-      if (!running) return;
+      queued = false;
+      if (!running || !onscreen) return;
+      if (now - lastF < 12) { schedule(); return; }
+      lastF = now;
       mx = lerp(mx, tmx, 0.04);
       my = lerp(my, tmy, 0.04);
       gl.uniform1f(uTime, (now - start) / 1000);
       gl.uniform2f(uMouse, mx, my);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
-      requestAnimationFrame(frame);
+      schedule();
     }
-    requestAnimationFrame(frame);
+    schedule();
   }
   // If the 3D hero (hero3d.js) is present it owns the hero; expose the raw
   // shader as its fallback (used only if Three.js / WebGL is unavailable).
@@ -1223,25 +1240,34 @@
     let rx = mx,
       ry = my;
 
+    // transform-only cursor: left/top writes are layout properties (main-thread
+    // relayout per mousemove — jank at 144Hz); translate3d stays on the compositor.
     window.addEventListener("mousemove", (e) => {
       mx = e.clientX;
       my = e.clientY;
       if (cursor && cursor.style.opacity !== "1") cursor.style.opacity = "1";
-      if (dot) {
-        dot.style.left = mx + "px";
-        dot.style.top = my + "px";
-      }
+      if (dot) dot.style.transform = "translate3d(" + mx + "px," + my + "px,0) translate(-50%,-50%)";
+      ringKick();
     });
-    function ringRaf() {
-      rx = lerp(rx, mx, 0.18);
-      ry = lerp(ry, my, 0.18);
-      if (ring) {
-        ring.style.left = rx + "px";
-        ring.style.top = ry + "px";
-      }
+    let ringRunning = false, ringPrevT = 0;
+    function ringRaf(now) {
+      const dt = Math.min(50, now - ringPrevT || 16.7);
+      ringPrevT = now;
+      const k = 1 - Math.pow(0.82, dt / 16.7);
+      rx = lerp(rx, mx, k);
+      ry = lerp(ry, my, k);
+      if (ring) ring.style.transform = "translate3d(" + rx + "px," + ry + "px,0) translate(-50%,-50%)";
+      if (Math.abs(mx - rx) < 0.3 && Math.abs(my - ry) < 0.3) { ringRunning = false; return; }
       requestAnimationFrame(ringRaf);
     }
-    requestAnimationFrame(ringRaf);
+    function ringKick() {
+      if (!ringRunning) {
+        ringRunning = true;
+        ringPrevT = performance.now();
+        requestAnimationFrame(ringRaf);
+      }
+    }
+    ringKick();
 
     const hoverTargets = "a, button, [data-cursor], summary, .card, .work-card, .plan, .quote";
     document.addEventListener("mouseover", (e) => {
@@ -1298,10 +1324,18 @@
 
     const items = $$(":scope > span:not(.sep)", track);
     const speed = 48; /* px / sec */
-    let x = 0, half = 0, paused = false, raf = 0;
+    let x = 0, half = 0, paused = false, raf = 0, onscreen = true;
 
     marquee.classList.add("marquee--carousel");
-    const measure = () => { half = track.scrollWidth / 2; };
+    // Item centers measured once (offsetLeft ignores transforms) — the old
+    // per-frame getBoundingClientRect on every item forced a layout pass per
+    // frame, 144/s on high-refresh monitors.
+    let centers = [], vw = 1;
+    const measure = () => {
+      half = track.scrollWidth / 2;
+      vw = marquee.clientWidth || 1;
+      centers = items.map((el) => el.offsetLeft + el.offsetWidth / 2);
+    };
     measure();
     window.addEventListener("resize", measure);
 
@@ -1310,6 +1344,7 @@
 
     let last = 0;
     const loop = (t) => {
+      if (!onscreen) { raf = 0; return; }
       if (!last) last = t;
       const dt = (t - last) / 1000;
       last = t;
@@ -1317,20 +1352,25 @@
       if (half && -x >= half) x += half;
       track.style.transform = `translateX(${x}px)`;
 
-      const mid = marquee.getBoundingClientRect().left + marquee.getBoundingClientRect().width / 2;
-      items.forEach((el) => {
-        const r = el.getBoundingClientRect();
-        const center = r.left + r.width / 2;
-        const dist = clamp(Math.abs(center - mid) / (marquee.clientWidth / 2), 0, 1);
+      const mid = vw / 2;
+      for (let i = 0; i < items.length; i++) {
+        const center = centers[i] + x;
+        const dist = clamp(Math.abs(center - mid) / mid, 0, 1);
         const scale = 1.12 - dist * 0.32;
         const rotate = (center < mid ? 1 : -1) * dist * 16;
-        const opacity = 1 - dist * 0.62;
-        el.style.transform = `perspective(900px) rotateY(${rotate}deg) scale(${scale})`;
-        el.style.opacity = opacity;
-      });
+        items[i].style.transform = `perspective(900px) rotateY(${rotate}deg) scale(${scale})`;
+        items[i].style.opacity = 1 - dist * 0.62;
+      }
 
       raf = requestAnimationFrame(loop);
     };
-    raf = requestAnimationFrame(loop);
+    const start = () => { if (!raf && onscreen) { last = 0; raf = requestAnimationFrame(loop); } };
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((es) => {
+        onscreen = es[0].isIntersecting;
+        start();
+      }).observe(marquee);
+    }
+    start();
   })();
 })();
