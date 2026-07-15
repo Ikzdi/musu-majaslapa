@@ -266,10 +266,16 @@
   function maxScroll() {
     return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
   }
-  function smoothLoop() {
-    currentY = lerp(currentY, targetY, 0.1);
+  let smoothPrevT = 0;
+  function smoothLoop(now) {
+    // Time-based easing: identical feel at 60Hz and 144Hz (a fixed 0.1/frame
+    // converges 2.4x faster on high-refresh monitors).
+    const dt = Math.min(50, now - smoothPrevT || 16.7);
+    smoothPrevT = now;
+    const k = 1 - Math.pow(0.9, dt / 16.7);
+    currentY = lerp(currentY, targetY, k);
     // Velocity → a subtle scroll-direction skew on media (decays with the inertia).
-    const vel = currentY - prevY;
+    const vel = ((currentY - prevY) / dt) * 16.7; // normalised to px per 60Hz frame
     prevY = currentY;
     html.style.setProperty("--sv", clamp(vel * 0.018, -2.6, 2.6).toFixed(2) + "deg");
     if (Math.abs(targetY - currentY) < 0.5) {
@@ -283,10 +289,16 @@
   function startSmooth() {
     if (!smoothing) {
       smoothing = true;
+      smoothPrevT = performance.now();
       requestAnimationFrame(smoothLoop);
     }
   }
   if (smoothEnabled) {
+    // CSS `scroll-behavior: smooth` would turn every scrollTo() below into a
+    // browser-driven animation that the next frame cancels and restarts — on
+    // high-refresh monitors the page barely moves at all. The JS loop owns the
+    // easing here, so programmatic scrolls must be instant.
+    html.style.scrollBehavior = "auto";
     window.addEventListener(
       "wheel",
       (e) => {
